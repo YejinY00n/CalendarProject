@@ -1,4 +1,4 @@
-package org.example.calendar;
+package org.example.schedule;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
