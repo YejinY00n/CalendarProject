@@ -9,6 +9,7 @@ import org.example.schedule.entity.Event;
 import org.example.schedule.repository.EventRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -77,9 +78,7 @@ public class EventServiceImpl implements EventService {
   // Id를 통해 단건 일정을 조회하는 메소드
   @Override
   public EventResponseDTO findEventById(Long id) {
-    return new EventResponseDTO(eventRepository.findEventById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-            "id = " + id + " 메모가 존재하지 않습니다. ")));
+    return new EventResponseDTO(eventRepository.findEventById(id));
   }
 
   // TODO: 값 검증 로직 추가
@@ -87,24 +86,28 @@ public class EventServiceImpl implements EventService {
   // TODO: Update 리퀘스트 DTO 새로 생성 필요 (생성, 수정날짜, id..) 혹은 DTO 생성자
   // 일정을 업데이트하는 메소드
   @Override
+  @Transactional
   public EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO) {
     int updatedRow = eventRepository.updateEvent(id, requestDTO.getTask(), requestDTO.getOwner());
 
+    // 수정된 일정이 없을 경우
     if (updatedRow == 0) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist: id" + id);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+          "일정이 존재하지 않습니다. (ID: " + id + " )");
     }
 
-    return new EventResponseDTO(new Event(requestDTO));
+    // 데이터가 정상적으로 수정되었는 지 조회 후 반환
+    return new EventResponseDTO(eventRepository.findEventById(id));
   }
-
-  // TODO: Transactional 조건 추가 필요
+  
   // 일정을 삭제하는 메소드
   @Override
   public void deleteEvent(Long id, String password) {
     int deletedRow = eventRepository.deleteEvent(id, password);
 
+    // 삭제 대상 일정이 없을 경우
     if (deletedRow == 0) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist: id" + id);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다. (ID: " + id + " )");
     }
   }
 }

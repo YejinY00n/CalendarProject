@@ -62,7 +62,6 @@ public class EventRepositoryImpl implements EventRepository {
     };
   }
 
-  // TODO: 조회 메소드 null 발생 시 예외 처리
   // 모든 일정 조회
   @Override
   public List<Event> findAllEvents() {
