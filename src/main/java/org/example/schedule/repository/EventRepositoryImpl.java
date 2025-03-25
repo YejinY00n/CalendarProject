@@ -116,8 +116,8 @@ public class EventRepositoryImpl implements EventRepository {
   // 일정을 업데이트하는 메소드
   @Override
   public int updateEvent(Long id, String task, String owner) {
-    return jdbcTemplate.update("UPDATE event SET task = ?, owner = ? WHERE id = ?", task, owner,
-        id);
+    return jdbcTemplate.update("UPDATE event SET task = ?, owner = ?, edited_time = ? WHERE id = ?",
+        task, owner, LocalDateTime.now(), id);
   }
 
   // 일정을 삭제하는 메소드
