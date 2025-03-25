@@ -12,7 +12,7 @@ public interface EventService {
 
 
   // 조건 일치 일정들 조회 (수정 날짜, 작성자명)
-  List<EventResponseDTO> findAllEventsByOwnerOrEditedTime(
+  List<EventResponseDTO> findAllEvents(
       String owner,
       LocalDateTime startDate,
       LocalDateTime endDate);

@@ -42,7 +42,7 @@ public class EventController {
       @RequestParam String owner,
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-    return eventService.findAllEventsByOwnerOrEditedTime(owner, startDate.atTime(0, 0, 0),
+    return eventService.findAllEvents(owner, startDate.atTime(0, 0, 0),
         endDate.atTime(23, 59, 59));
   }
 
