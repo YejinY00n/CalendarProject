@@ -1,9 +1,7 @@
 package org.example.schedule.repository;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
-import org.example.schedule.dto.EventRequestDTO;
-import org.example.schedule.dto.EventResponseDTO;
 import org.example.schedule.entity.Event;
 
 public interface EventRepository {
@@ -11,11 +9,12 @@ public interface EventRepository {
   // 생성
   Event createEvent(Event event);
 
-  // 전체 조회
-  List<Event> findAllEvents();
 
   // 조건 일치 일정들 조회 (수정 날짜, 작성자명)
-  List<Event> findAllEventsByOwnerOrEditedTime(String owner, Timestamp editedTime);
+  List<Event> findAllEventsByOwnerOrEditedTime(
+      String owner,
+      LocalDateTime startDate,
+      LocalDateTime endDate);
 
   // 단건 조회
   Event findEventById(Long id);
