@@ -52,9 +52,9 @@ public class EventServiceImpl implements EventService {
   // TODO: Update 리퀘스트 DTO 새로 생성 필요 (생성, 수정날짜, id..) 혹은 DTO 생성자
   @Override
   public EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO) {
-    int updateRow = eventRepository.updateEvent(id, requestDTO.getTask(), requestDTO.getOwner());
+    int updatedRow = eventRepository.updateEvent(id, requestDTO.getTask(), requestDTO.getOwner());
 
-    if (updateRow == 0) {
+    if (updatedRow == 0) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist: id" + id);
     }
 
@@ -63,6 +63,10 @@ public class EventServiceImpl implements EventService {
 
   @Override
   public void deleteEvent(Long id, String password) {
+    int deletedRow = eventRepository.deleteEvent(id, password);
 
+    if (deletedRow == 0) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist: id" + id);
+    }
   }
 }

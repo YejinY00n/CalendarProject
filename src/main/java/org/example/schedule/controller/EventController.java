@@ -8,6 +8,7 @@ import org.example.schedule.service.EventService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class EventController {
   // 조건 일치 일정들 조회 (수정 날짜, 작성자명)
   // TODO: LocalDate -> LocalDateTime 로직 이동시키기 고려
   @GetMapping()
-  List<EventResponseDTO> findAllEventsByOwnerOrEditedTime(
+  public List<EventResponseDTO> findAllEventsByOwnerOrEditedTime(
       @RequestParam String owner,
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
@@ -47,18 +48,23 @@ public class EventController {
 
   // 단건 조회
   @GetMapping("/{id}")
-  EventResponseDTO findEventById(@PathVariable Long id) {
+  public EventResponseDTO findEventById(@PathVariable Long id) {
     return eventService.findEventById(id);
   }
 
   // 일정 수정 (id, 할일, 작성자명, 비번)
   @PutMapping("/{id}")
-  ResponseEntity<EventResponseDTO> updateEvent(
+  public ResponseEntity<EventResponseDTO> updateEvent(
       @PathVariable Long id,
       @RequestBody EventRequestDTO requestDTO) {
     return new ResponseEntity<>(eventService.updateEvent(id, requestDTO), HttpStatus.OK);
   }
 
-//  // 일정 삭제 (id, 비번)
-//  void deleteEvent(Long id, String password);
+  // 일정 삭제 (id, 비번)
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteEvent(@PathVariable Long id, @RequestBody String password) {
+    eventService.deleteEvent(id, password);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

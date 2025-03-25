@@ -82,7 +82,7 @@ public class EventRepositoryImpl implements EventRepository {
   }
 
   @Override
-  public void deleteEvent(Long id, String password) {
-
+  public int deleteEvent(Long id, String password) {
+    return jdbcTemplate.update("DELETE FROM event WHERE id = ?", id);
   }
 }

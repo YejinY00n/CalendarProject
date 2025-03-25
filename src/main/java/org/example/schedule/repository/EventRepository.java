@@ -23,6 +23,6 @@ public interface EventRepository {
   int updateEvent(Long id, String task, String owner);
 
   // 일정 삭제 (id, 비번)
-  void deleteEvent(Long id, String password);
+  int deleteEvent(Long id, String password);
 
 }
