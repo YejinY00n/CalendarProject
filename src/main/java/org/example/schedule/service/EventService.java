@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.example.schedule.dto.EventRequestDTO;
 import org.example.schedule.dto.EventResponseDTO;
+import org.example.schedule.dto.PasswordRequestDTO;
 
 public interface EventService {
 
@@ -24,5 +25,5 @@ public interface EventService {
   EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO);
 
   // 일정 삭제 (id, 비번)
-  void deleteEvent(Long id, String password);
+  void deleteEvent(Long id, PasswordRequestDTO password);
 }

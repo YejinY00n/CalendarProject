@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.example.schedule.dto.EventRequestDTO;
 import org.example.schedule.dto.EventResponseDTO;
+import org.example.schedule.dto.PasswordRequestDTO;
 import org.example.schedule.entity.Event;
 import org.example.schedule.repository.EventRepository;
 import org.springframework.http.HttpStatus;
@@ -99,7 +100,15 @@ public class EventServiceImpl implements EventService {
 
   // 일정을 삭제하는 메소드
   @Override
-  public void deleteEvent(Long id, String password) {
+  public void deleteEvent(Long id, PasswordRequestDTO passwordRequestDTO) {
+    String password = passwordRequestDTO.getPassword();
+
+    // 비밀번호 검증
+    if (!isValidPassword(id, password)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다.");
+    }
+
+    // 일정 삭제
     int deletedRow = eventRepository.deleteEvent(id, password);
 
     // 삭제 대상 일정이 없을 경우

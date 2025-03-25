@@ -9,7 +9,6 @@ public interface EventRepository {
   // 생성
   Event createEvent(Event event);
 
-
   // 모든 일정 조회
   List<Event> findAllEvents();
 

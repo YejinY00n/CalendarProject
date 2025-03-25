@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.example.schedule.dto.EventRequestDTO;
 import org.example.schedule.dto.EventResponseDTO;
+import org.example.schedule.dto.PasswordRequestDTO;
 import org.example.schedule.service.EventService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,7 @@ public class EventController {
     return eventService.findEventById(id);
   }
 
+  // TODO: 비밀번호 받는 부분 암호화 기능 추가
   // 일정 수정 (id, 할일, 작성자명, 비번)
   @PutMapping("/{id}")
   public ResponseEntity<EventResponseDTO> updateEvent(
@@ -61,7 +63,8 @@ public class EventController {
 
   // 일정 삭제 (id, 비번)
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteEvent(@PathVariable Long id, @RequestBody String password) {
+  public ResponseEntity<Void> deleteEvent(@PathVariable Long id,
+      @RequestBody PasswordRequestDTO password) {
     eventService.deleteEvent(id, password);
 
     return new ResponseEntity<>(HttpStatus.OK);
