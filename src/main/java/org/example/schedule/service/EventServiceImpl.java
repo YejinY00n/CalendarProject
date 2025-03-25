@@ -7,7 +7,9 @@ import org.example.schedule.dto.EventRequestDTO;
 import org.example.schedule.dto.EventResponseDTO;
 import org.example.schedule.entity.Event;
 import org.example.schedule.repository.EventRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -45,9 +47,18 @@ public class EventServiceImpl implements EventService {
     return new EventResponseDTO(eventRepository.findEventById(id));
   }
 
+  // TODO: 값 검증 로직 추가
+  // TODO: 비밀번호 검증 로직 추가
+  // TODO: Update 리퀘스트 DTO 새로 생성 필요 (생성, 수정날짜, id..) 혹은 DTO 생성자
   @Override
-  public EventResponseDTO updateEvent(EventRequestDTO requestDTO) {
-    return null;
+  public EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO) {
+    int updateRow = eventRepository.updateEvent(id, requestDTO.getTask(), requestDTO.getOwner());
+
+    if (updateRow == 0) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist: id" + id);
+    }
+
+    return new EventResponseDTO(new Event(requestDTO));
   }
 
   @Override

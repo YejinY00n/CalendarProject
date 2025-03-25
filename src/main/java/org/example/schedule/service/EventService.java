@@ -21,7 +21,7 @@ public interface EventService {
   EventResponseDTO findEventById(Long id);
 
   // 일정 수정 (id, 할일, 작성자명, 비번)
-  EventResponseDTO updateEvent(EventRequestDTO requestDTO);
+  EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO);
 
   // 일정 삭제 (id, 비번)
   void deleteEvent(Long id, String password);

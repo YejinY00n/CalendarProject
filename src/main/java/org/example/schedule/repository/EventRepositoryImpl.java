@@ -76,8 +76,9 @@ public class EventRepositoryImpl implements EventRepository {
   }
 
   @Override
-  public Event updateEvent(Event event) {
-    return null;
+  public int updateEvent(Long id, String task, String owner) {
+    return jdbcTemplate.update("UPDATE event SET task = ?, owner = ? WHERE id = ?", task, owner,
+        id);
   }
 
   @Override

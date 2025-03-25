@@ -20,7 +20,7 @@ public interface EventRepository {
   Event findEventById(Long id);
 
   // 일정 수정 (id, 할일, 작성자명, 비번)
-  Event updateEvent(Event event);
+  int updateEvent(Long id, String task, String owner);
 
   // 일정 삭제 (id, 비번)
   void deleteEvent(Long id, String password);

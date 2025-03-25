@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,9 +51,14 @@ public class EventController {
     return eventService.findEventById(id);
   }
 
-//  // 일정 수정 (id, 할일, 작성자명, 비번)
-//  EventResponseDTO updateEvent(EventRequestDTO requestDTO);
-//
+  // 일정 수정 (id, 할일, 작성자명, 비번)
+  @PutMapping("/{id}")
+  ResponseEntity<EventResponseDTO> updateEvent(
+      @PathVariable Long id,
+      @RequestBody EventRequestDTO requestDTO) {
+    return new ResponseEntity<>(eventService.updateEvent(id, requestDTO), HttpStatus.OK);
+  }
+
 //  // 일정 삭제 (id, 비번)
 //  void deleteEvent(Long id, String password);
 }
