@@ -21,12 +21,13 @@ public class EventServiceImpl implements EventService {
     this.eventRepository = eventRepository;
   }
 
+  // 일정을 생성하는 메소드
   @Override
   public EventResponseDTO createEvent(EventRequestDTO requestDTO) {
     return new EventResponseDTO(eventRepository.createEvent(new Event(requestDTO)));
   }
 
-  // TODO: List Entity -> List DTO 메소드화 필요
+  // 조건(작성자, 기간)에 맞는 모든 일정을 조회하는 메소드
   @Override
   public List<EventResponseDTO> findAllEvents(
       String owner,
@@ -73,14 +74,18 @@ public class EventServiceImpl implements EventService {
     }
   }
 
+  // Id를 통해 단건 일정을 조회하는 메소드
   @Override
   public EventResponseDTO findEventById(Long id) {
-    return new EventResponseDTO(eventRepository.findEventById(id));
+    return new EventResponseDTO(eventRepository.findEventById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "id = " + id + " 메모가 존재하지 않습니다. ")));
   }
 
   // TODO: 값 검증 로직 추가
   // TODO: 비밀번호 검증 로직 추가
   // TODO: Update 리퀘스트 DTO 새로 생성 필요 (생성, 수정날짜, id..) 혹은 DTO 생성자
+  // 일정을 업데이트하는 메소드
   @Override
   public EventResponseDTO updateEvent(Long id, EventRequestDTO requestDTO) {
     int updatedRow = eventRepository.updateEvent(id, requestDTO.getTask(), requestDTO.getOwner());
@@ -92,6 +97,8 @@ public class EventServiceImpl implements EventService {
     return new EventResponseDTO(new Event(requestDTO));
   }
 
+  // TODO: Transactional 조건 추가 필요
+  // 일정을 삭제하는 메소드
   @Override
   public void deleteEvent(Long id, String password) {
     int deletedRow = eventRepository.deleteEvent(id, password);

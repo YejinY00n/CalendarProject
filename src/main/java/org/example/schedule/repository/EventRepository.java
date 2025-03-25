@@ -17,7 +17,8 @@ public interface EventRepository {
   List<Event> findAllEventsByOwner(String owner);
 
   // 기간 내 모든 일정 조회
-  List<Event> findAllEventsBetweenDateRange(LocalDateTime startDate, LocalDateTime endDate);
+  List<Event> findAllEventsBetweenDateRange(LocalDateTime startDate,
+      LocalDateTime endDate);
 
   // 기간 내 작성자의 모든 일정 조회
   List<Event> findAllEventsByOwnerBetweenDateRange(

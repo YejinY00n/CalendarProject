@@ -13,7 +13,6 @@ public class EventResponseDTO {
   private LocalDateTime editedTime;
   private String owner;
 
-  // TODO: 빌더 넣을까?
   public EventResponseDTO(Event event) {
     this.id = event.getId();
     this.task = event.getTask();

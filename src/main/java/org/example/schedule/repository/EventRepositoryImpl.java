@@ -6,13 +6,16 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.example.schedule.entity.Event;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 @Repository
 public class EventRepositoryImpl implements EventRepository {
@@ -63,21 +66,30 @@ public class EventRepositoryImpl implements EventRepository {
   // 모든 일정 조회
   @Override
   public List<Event> findAllEvents() {
-    return jdbcTemplate.query("SELECT * FROM event", eventRowMapper());
+    return Optional.ofNullable(jdbcTemplate.query(
+            "SELECT * FROM event", eventRowMapper()))
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "일정이 존재하지 않습니다. "));
   }
 
   // 작성자의 모든 일정 조회
   @Override
   public List<Event> findAllEventsByOwner(String owner) {
-    return jdbcTemplate.query("SELECT * FROM event WHERE owner = ?", eventRowMapper(), owner);
+    return Optional.ofNullable(jdbcTemplate.query(
+        "SELECT * FROM event WHERE owner = ?", eventRowMapper(), owner)
+    ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+        owner + " 님의 일정이 없습니다."));
   }
 
   // 기간 내 모든 일정 조회
   @Override
   public List<Event> findAllEventsBetweenDateRange(
       LocalDateTime startDate, LocalDateTime endDate) {
-    return jdbcTemplate.query("SELECT * FROM event WHERE edited_time BETWEEN ? AND ?",
-        eventRowMapper(), startDate, endDate);
+    return Optional.ofNullable(jdbcTemplate.query(
+            "SELECT * FROM event WHERE edited_time BETWEEN ? AND ?",
+            eventRowMapper(), startDate, endDate))
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "조회한 기간 내 일정이 존재하지 않습니다. "));
   }
 
   // 기간 내 작성자의 모든 일정 조회
@@ -86,23 +98,30 @@ public class EventRepositoryImpl implements EventRepository {
       String owner,
       LocalDateTime startDate,
       LocalDateTime endDate) {
-    return jdbcTemplate.query(
-        "SELECT * FROM event WHERE owner = ? AND edited_time BETWEEN ? AND ?",
-        eventRowMapper(), owner, startDate, endDate);
+    return Optional.ofNullable(jdbcTemplate.query(
+            "SELECT * FROM event WHERE owner = ? AND edited_time BETWEEN ? AND ?",
+            eventRowMapper(), owner, startDate, endDate))
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "조회한 기간 내 " + owner + " 님의 일정이 존재하지 않습니다. "));
   }
 
-  // TODO: Null 경우 -> Optional 처리
+  // ID로 선택한 일정을 조회하는 메소드
   @Override
   public Event findEventById(Long id) {
-    return jdbcTemplate.query("SELECT * FROM event WHERE id = ?", eventRowMapper(), id).get(0);
+    return jdbcTemplate.query("SELECT * FROM event WHERE id = ?", eventRowMapper(), id).stream()
+        .findAny()
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "일정이 존재하지 않습니다. (ID: " + id + " )"));
   }
 
+  // 일정을 업데이트하는 메소드
   @Override
   public int updateEvent(Long id, String task, String owner) {
     return jdbcTemplate.update("UPDATE event SET task = ?, owner = ? WHERE id = ?", task, owner,
         id);
   }
 
+  // 일정을 삭제하는 메소드
   @Override
   public int deleteEvent(Long id, String password) {
     return jdbcTemplate.update("DELETE FROM event WHERE id = ?", id);
