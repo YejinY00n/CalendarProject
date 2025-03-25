@@ -36,14 +36,13 @@ public class EventController {
   }
 
   // 조건 일치 일정들 조회 (수정 날짜, 작성자명)
-  // TODO: LocalDate -> LocalDateTime 로직 이동시키기 고려
   @GetMapping()
-  public List<EventResponseDTO> findAllEventsByOwnerOrEditedTime(
-      @RequestParam String owner,
-      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-    return eventService.findAllEvents(owner, startDate.atTime(0, 0, 0),
-        endDate.atTime(23, 59, 59));
+  public List<EventResponseDTO> findAllEvents(
+      @RequestParam(required = false) String owner,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    return eventService.findAllEvents(owner, startDate != null ? startDate.atTime(0, 0, 0) : null,
+        endDate != null ? endDate.atTime(23, 59, 59) : null);
   }
 
   // 단건 조회

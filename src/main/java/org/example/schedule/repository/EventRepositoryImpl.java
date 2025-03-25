@@ -59,8 +59,30 @@ public class EventRepositoryImpl implements EventRepository {
     };
   }
 
+  // TODO: 조회 메소드 null 발생 시 예외 처리
+  // 모든 일정 조회
   @Override
-  public List<Event> findAllEventsByOwnerOrEditedTime(
+  public List<Event> findAllEvents() {
+    return jdbcTemplate.query("SELECT * FROM event", eventRowMapper());
+  }
+
+  // 작성자의 모든 일정 조회
+  @Override
+  public List<Event> findAllEventsByOwner(String owner) {
+    return jdbcTemplate.query("SELECT * FROM event WHERE owner = ?", eventRowMapper(), owner);
+  }
+
+  // 기간 내 모든 일정 조회
+  @Override
+  public List<Event> findAllEventsBetweenDateRange(
+      LocalDateTime startDate, LocalDateTime endDate) {
+    return jdbcTemplate.query("SELECT * FROM event WHERE edited_time BETWEEN ? AND ?",
+        eventRowMapper(), startDate, endDate);
+  }
+
+  // 기간 내 작성자의 모든 일정 조회
+  @Override
+  public List<Event> findAllEventsByOwnerBetweenDateRange(
       String owner,
       LocalDateTime startDate,
       LocalDateTime endDate) {

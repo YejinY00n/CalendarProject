@@ -10,8 +10,17 @@ public interface EventRepository {
   Event createEvent(Event event);
 
 
-  // 조건 일치 일정들 조회 (수정 날짜, 작성자명)
-  List<Event> findAllEventsByOwnerOrEditedTime(
+  // 모든 일정 조회
+  List<Event> findAllEvents();
+
+  // 작성자의 모든 일정 조회
+  List<Event> findAllEventsByOwner(String owner);
+
+  // 기간 내 모든 일정 조회
+  List<Event> findAllEventsBetweenDateRange(LocalDateTime startDate, LocalDateTime endDate);
+
+  // 기간 내 작성자의 모든 일정 조회
+  List<Event> findAllEventsByOwnerBetweenDateRange(
       String owner,
       LocalDateTime startDate,
       LocalDateTime endDate);
