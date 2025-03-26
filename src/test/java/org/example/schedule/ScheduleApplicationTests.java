@@ -1,10 +1,10 @@
-package org.example.calendar;
+package org.example.schedule;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CalendarApplicationTests {
+class ScheduleApplicationTests {
 
   @Test
   void contextLoads() {
