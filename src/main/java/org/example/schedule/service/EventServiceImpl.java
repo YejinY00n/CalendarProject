@@ -26,6 +26,17 @@ public class EventServiceImpl implements EventService {
   // 일정을 생성하는 메소드
   @Override
   public EventResponseDTO createEvent(EventRequestDTO requestDTO) {
+    // 일정과 작성자 공백 or null 검증
+    if ((requestDTO.getOwner() == null || requestDTO.getOwner().isEmpty()) && (
+        requestDTO.getTask() == null || requestDTO.getTask().isEmpty())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 혹은 작성자를 입력해주세요.");
+    }
+
+    // 비밀번호 공백 검증
+    if ((requestDTO.getPassword() == null || requestDTO.getPassword().isEmpty())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 필수 입력값입니다.");
+    }
+
     return new EventResponseDTO(eventRepository.createEvent(new Event(requestDTO)));
   }
 
